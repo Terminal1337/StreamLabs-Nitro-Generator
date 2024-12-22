@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"streamlabs/internal/captcha"
-	"streamlabs/internal/helpers"
 	"streamlabs/pkg/logging"
 
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"
 )
 
-func Signup(Client tls_client.HttpClient, Email string) (*http.Response, error) {
+func Signup(Client tls_client.HttpClient, Email string, Password string) (*http.Response, error) {
 	Captcha, err := captcha.CapSolve()
 	if err != nil {
 		logging.Logger.Error().Str("msg", err.Error()).Msg("Captcha Solve Failed")
@@ -22,7 +21,7 @@ func Signup(Client tls_client.HttpClient, Email string) (*http.Response, error) 
 
 	Data := Payload{
 		Email:            Email,
-		Password:         helpers.GeneratePassword(12),
+		Password:         Password,
 		CaptchaToken:     Captcha,
 		Locale:           "en-US",
 		Agree:            true,
@@ -48,7 +47,7 @@ func Signup(Client tls_client.HttpClient, Email string) (*http.Response, error) 
 		return nil, err
 	}
 
-	req.Header.Set("X-XSRF-TOKEN", xsrf)
+	req.Header.Set("XSRF-TOKEN", xsrf)
 
 	resp, err := Client.Do(req)
 	if err != nil {

@@ -1,8 +1,9 @@
 package streamlabs
 
 import (
-	"fmt"
+	"net/url"
 	"streamlabs/internal/emails"
+	"streamlabs/internal/helpers"
 	"streamlabs/pkg/logging"
 )
 
@@ -24,14 +25,15 @@ func Create() {
 		return
 	}
 
-	logging.Logger.Info().Str("Email", Email).Str("ID", EmailID).Msg("Recieved Email")
+	logging.Logger.Info().Str("Email", Email).Str("ID", EmailID).Msg("Received Email")
 
-	resp, err := Signup(Client, Email)
-	if err != nil || resp.StatusCode == 200 {
+	Password := helpers.GeneratePassword(12)
+	resp, err := Signup(Client, Email, Password)
+	if err != nil || resp.StatusCode != 200 {
 		if resp != nil {
 			resp.Body.Close()
 		}
-		logging.Logger.Error().Str("msg", "Error signing up or unexpected status code").Int("status_code", resp.StatusCode)
+		logging.Logger.Error().Str("msg", "Error signing up or unexpected status code").Int("status_code", resp.StatusCode).Msg("Signup Request")
 		return
 	}
 
@@ -40,7 +42,8 @@ func Create() {
 		logging.Logger.Error().Msg("No verification code received from Kopeechka")
 		return
 	}
-	logging.Logger.Info().Str("Code", Code).Msg("Recieved Code")
+
+	logging.Logger.Info().Str("Code", Code).Msg("Received Code")
 
 	resp, err = EmailVerify(Client, Email, Code)
 	if err != nil || resp.StatusCode == 204 {
@@ -51,6 +54,11 @@ func Create() {
 		return
 	}
 
-	fmt.Println("Account created successfully")
-	logging.Logger.Info().Msg("Account successfully created")
+	logging.Logger.Info().Str("email", Email).Str("password", Password).Msg("Account successfully created")
+
+	t, _ := url.Parse("https://streamlabs.com")
+	err = helpers.WriteCookiesToFile(Email, Password, Client.GetCookieJar().Cookies(t))
+	if err != nil {
+		logging.Logger.Error().Str("msg", err.Error()).Msg("Saving File")
+	}
 }

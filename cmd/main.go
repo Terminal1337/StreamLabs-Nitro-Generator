@@ -2,8 +2,19 @@ package main
 
 import (
 	"streamlabs/internal/streamlabs"
+
+	"github.com/zenthangplus/goccm"
 )
 
 func main() {
-	streamlabs.Create()
+	c := goccm.New(20)
+	for {
+		c.Wait()
+		go func() {
+			defer c.Done()
+			streamlabs.Create()
+		}()
+	}
+	c.WaitAllDone()
+
 }

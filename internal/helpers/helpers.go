@@ -2,9 +2,14 @@
 package helpers
 
 import (
+	"encoding/json"
+	"fmt"
 	"math/rand"
+	"os"
 	"time"
 	"unicode"
+
+	http "github.com/bogdanfinn/fhttp"
 )
 
 const (
@@ -53,4 +58,39 @@ func containsRequiredChars(password string) bool {
 	}
 
 	return hasLower && hasUpper && hasNumber && hasSpecial
+}
+
+func WriteCookiesToFile(email, password string, cookies []*http.Cookie) error {
+	outputDir := "data/output"
+	err := os.MkdirAll(outputDir, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("error creating output directory: %w", err)
+	}
+
+	// Open the file in append mode, or create it if it doesn't exist
+	file, err := os.OpenFile(fmt.Sprintf("%s/created.json", outputDir), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("error opening file: %w", err)
+	}
+	defer file.Close()
+
+	// Structure for saving data
+	data := struct {
+		Email    string         `json:"email"`
+		Password string         `json:"password"`
+		Cookies  []*http.Cookie `json:"cookies"`
+	}{
+		Email:    email,
+		Password: password,
+		Cookies:  cookies,
+	}
+
+	// Write the data in JSON format
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(data); err != nil {
+		return fmt.Errorf("error encoding data to JSON: %w", err)
+	}
+
+	return nil
 }

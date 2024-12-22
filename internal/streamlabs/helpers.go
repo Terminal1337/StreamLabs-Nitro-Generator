@@ -16,6 +16,7 @@ func CreateClient() (tls_client.HttpClient, error) {
 		tls_client.WithClientProfile(profiles.Chrome_131),
 		tls_client.WithNotFollowRedirects(),
 		tls_client.WithCookieJar(jar),
+		tls_client.WithProxyUrl("http://XMsamqEkoHYXUqeQ:4shFQYeMDJFS7Qt@omega.proxiflare.com:8080"),
 	}
 	Client, err := tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
 	if err != nil {
@@ -27,22 +28,18 @@ func CreateClient() (tls_client.HttpClient, error) {
 }
 
 func GetXSRFTokenFromJar(Client tls_client.HttpClient) (string, error) {
-	// Parse the URL string into a *url.URL
 	parsedURL, err := url.Parse("https://streamlabs.com")
 	if err != nil {
 		return "", fmt.Errorf("failed to parse URL: %v", err)
 	}
 
-	// Retrieve cookies for the parsed URL
 	cookies := Client.GetCookieJar().Cookies(parsedURL)
 
-	// Loop through the cookies to find the X-XSRF-TOKEN
 	for _, cookie := range cookies {
-		if cookie.Name == "X-XSRF-TOKEN" {
+		if cookie.Name == "XSRF-TOKEN" {
 			return cookie.Value, nil
 		}
 	}
 
-	// If the cookie is not found, return an error
-	return "", fmt.Errorf("X-XSRF-TOKEN cookie not found")
+	return "", fmt.Errorf("XSRF-TOKEN cookie not found")
 }

@@ -27,8 +27,9 @@ func GetCookies(Client tls_client.HttpClient) error {
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("Status Code MisMatch : ", resp.StatusCode)
 	}
+
 	req2, err := http.NewRequest(http.MethodGet, "https://streamlabs.com/api/v5/user/basic-information", nil)
-	req2.Header = BASE_HEADERS.Clone()
+	req2.Header = req.Header
 	if err != nil {
 		logging.Logger.Error().
 			Str("msg", err.Error()).
@@ -36,16 +37,16 @@ func GetCookies(Client tls_client.HttpClient) error {
 		return err
 	}
 
-	resp, err = Client.Do(req)
+	resp2, err := Client.Do(req2)
 	if err != nil {
 		logging.Logger.Error().
 			Str("msg", err.Error()).
 			Msg("First Cookie Response")
 		return err
 	}
-	if resp.StatusCode != 200 {
+
+	if resp2.StatusCode != 401 {
 		return fmt.Errorf("Status Code MisMatch : ", resp.StatusCode)
 	}
-
 	return nil
 }
