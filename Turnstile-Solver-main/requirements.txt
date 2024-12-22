@@ -1,4 +1,0 @@
-logmagix
-patchright
-quart
-hypercorn
