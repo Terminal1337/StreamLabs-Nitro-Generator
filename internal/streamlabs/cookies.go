@@ -24,6 +24,8 @@ func GetCookies(Client tls_client.HttpClient) error {
 			Msg("First Cookie Response")
 		return err
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("Status Code MisMatch : ", resp.StatusCode)
 	}
@@ -44,6 +46,7 @@ func GetCookies(Client tls_client.HttpClient) error {
 			Msg("First Cookie Response")
 		return err
 	}
+	defer resp2.Body.Close()
 
 	if resp2.StatusCode != 401 {
 		return fmt.Errorf("Status Code MisMatch : ", resp.StatusCode)
