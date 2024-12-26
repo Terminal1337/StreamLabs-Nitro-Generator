@@ -31,13 +31,13 @@ func init() {
 	var err error
 
 	Proxies, err = GoCycle.NewFromFile("data/input/proxies_ipv6.txt") // v6 proxy
-	if err != nil {
+	if err != nil || Proxies.ListLength() == 0 {
 		logging.Logger.Error().Str("msg", err.Error()).Msg("Failed to load proxies")
 		os.Exit(1)
 	}
 
 	TwTs, err = GoCycle.NewFromFile("data/input/twitter.txt")
-	if err != nil {
+	if err != nil || TwTs.ListLength() == 0 {
 		logging.Logger.Error().Str("msg", err.Error()).Msg("Failed to load Twitter accounts")
 		os.Exit(1)
 	}
