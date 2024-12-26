@@ -19,3 +19,9 @@ How to Use:
 NOTE : It's not fully finished yet. I have to clean up some shit and add configurable options.
 
 
+```
+TODO:
+1) Config
+2) CleanUP
+3) TwT connect & disconnect for reuse
+4) IDK?
