@@ -1,3 +1,12 @@
+/*
+Developer: Terminal
+
+Discord : casanova4
+Telegram : https://t.me/icebergs
+
+If u need good proxies for cf hmu
+*/
+
 package main
 
 import (
