@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	c := goccm.New(20)
+	c := goccm.New(1)
 	for {
 		c.Wait()
 		go func() {

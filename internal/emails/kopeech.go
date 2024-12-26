@@ -16,7 +16,7 @@ import (
 
 var (
 	client   *kopeechka.EmailClient
-	domains_ = []string{"mail.com"} //, "outlook.com", "yahoo.com", "hotmail.com", "mail.com", "email.com"
+	domains_ = []string{"outlook.com", "yahoo.com", "hotmail.com", "mail.com", "email.com"} //, "outlook.com", "yahoo.com", "hotmail.com", "mail.com", "email.com"
 )
 
 func init() {
@@ -35,7 +35,7 @@ func GetEmailKopeechka(key string) (string, string) {
 	for i := 0; i < 5; i++ {
 		domain := GetRandomDomain() // Get a random domain
 		MailID, Email := client.BuyEmail(key, domain, "streamlabs.com")
-		if MailID != "" && Email != "" {
+		if MailID != "NOT_OKAY" && Email != "" {
 			return MailID, Email
 		}
 		// If MailID or Email is empty, retry after some time
@@ -67,7 +67,7 @@ func GetCodeKopeechka(emailKey, mailID string) string {
 	url := fmt.Sprintf("https://api.kopeechka.store/mailbox-get-message?full=1&id=%s&token=%s&type=JSON&api=2.0", mailID, emailKey)
 
 	// Make the API request
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 50; i++ {
 		resp, err := http.Get(url)
 		if err != nil {
 			log.Println("Error fetching data:", err)

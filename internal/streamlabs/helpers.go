@@ -3,6 +3,7 @@ package streamlabs
 import (
 	"fmt"
 	"net/url"
+	"strings"
 
 	tls_client "github.com/bogdanfinn/tls-client"
 	"github.com/bogdanfinn/tls-client/profiles"
@@ -14,9 +15,8 @@ func CreateClient() (tls_client.HttpClient, error) {
 	options := []tls_client.HttpClientOption{
 		tls_client.WithTimeoutSeconds(30),
 		tls_client.WithClientProfile(profiles.Chrome_131),
-		tls_client.WithNotFollowRedirects(),
 		tls_client.WithCookieJar(jar),
-		tls_client.WithProxyUrl("http://XMsamqEkoHYXUqeQ:4shFQYeMDJFS7Qt@omega.proxiflare.com:8080"),
+		tls_client.WithProxyUrl("http://" + Proxies.Next()),
 	}
 	Client, err := tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
 	if err != nil {
@@ -37,7 +37,9 @@ func GetXSRFTokenFromJar(Client tls_client.HttpClient) (string, error) {
 
 	for _, cookie := range cookies {
 		if cookie.Name == "XSRF-TOKEN" {
-			return cookie.Value, nil
+			// Replace '%3D' with '=' manually
+			decodedValue := strings.Replace(cookie.Value, "%3D", "=", -1)
+			return decodedValue, nil
 		}
 	}
 

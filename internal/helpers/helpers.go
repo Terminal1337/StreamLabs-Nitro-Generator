@@ -2,6 +2,7 @@
 package helpers
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"math/rand"
@@ -93,4 +94,22 @@ func WriteCookiesToFile(email, password string, cookies []*http.Cookie) error {
 	}
 
 	return nil
+}
+
+func GetCt0(length int) (string, error) {
+	// Calculate how many bytes are needed to achieve the desired length in hex
+	numBytes := length / 2
+	if length%2 != 0 {
+		numBytes++
+	}
+
+	// Generate random bytes
+	bytes := make([]byte, numBytes)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+
+	// Return the hexadecimal representation of the bytes
+	return hex.EncodeToString(bytes)[:length], nil
 }
