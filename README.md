@@ -9,6 +9,12 @@ proxies_ipv4 -> for x requests
 - U can put same list on both if u plan to use ipv4 only
 ````
 
+```
+How to Use:
+
+1) Remove Comments From cmd/main.go and Add Your Own Name
+2) Compile with "go build" & Resell With Your Name
+```
 
 NOTE : It's not fully finished yet. I have to clean up some shit and add configurable options.
 
