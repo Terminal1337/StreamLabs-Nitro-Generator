@@ -2,7 +2,7 @@ package streamlabs
 
 import (
 	"fmt"
-	"streamlabs/pkg/logging"
+	"streamlabsuwu/pkg/logging"
 
 	http "github.com/bogdanfinn/fhttp"
 	tls_client "github.com/bogdanfinn/tls-client"

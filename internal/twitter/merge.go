@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"streamlabsuwu/internal/helpers"
 	"strings"
 
 	http "github.com/bogdanfinn/fhttp"
@@ -22,6 +23,9 @@ func Merge(auth_token string, Client tls_client.HttpClient, Headers http.Header,
 	req.Header.Set("Referer", "https://streamlabs.com/dashboard")
 	req.Header.Set("X-CSRF-TOKEN", CSRF)
 
+	// Set IPv4 For X Requests
+
+	Client.SetProxy("http://" + helpers.IPv4.Next())
 	resp, err := Client.Do(req)
 	if err != nil {
 		return err

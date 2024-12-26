@@ -1,13 +1,23 @@
 package main
 
 import (
-	"streamlabs/internal/streamlabs"
+	"fmt"
+	"streamlabsuwu/internal/streamlabs"
 
 	"github.com/zenthangplus/goccm"
 )
 
 func main() {
-	c := goccm.New(1)
+	var err error
+	var threads int
+	fmt.Print("Enter the number of threads: ")
+	_, err = fmt.Scanln(&threads)
+	if err != nil {
+		fmt.Println("Error reading input:", err)
+		return
+	}
+
+	c := goccm.New(threads)
 	for {
 		c.Wait()
 		go func() {

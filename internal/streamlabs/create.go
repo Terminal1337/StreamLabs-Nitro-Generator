@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"streamlabs/internal/captcha"
-	"streamlabs/pkg/logging"
+	"streamlabsuwu/internal/captcha"
+	"streamlabsuwu/pkg/logging"
 	"strings"
 
 	http "github.com/bogdanfinn/fhttp"

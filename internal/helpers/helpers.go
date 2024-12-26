@@ -2,16 +2,33 @@
 package helpers
 
 import (
+	"bufio"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
+	"strings"
 	"time"
 	"unicode"
 
+	"github.com/Terminal1337/GoCycle"
 	http "github.com/bogdanfinn/fhttp"
 )
+
+var (
+	IPv4 *GoCycle.Cycle // IPV4 Proxies
+)
+
+func init() {
+	var err error
+	IPv4, err = GoCycle.NewFromFile("data/input/proxies_ipv4.txt")
+	if err != nil {
+		log.Println(err.Error())
+		os.Exit(1)
+	}
+}
 
 const (
 	lowerChars   = "abcdefghijklmnopqrstuvwxyz"
@@ -112,4 +129,85 @@ func GetCt0(length int) (string, error) {
 
 	// Return the hexadecimal representation of the bytes
 	return hex.EncodeToString(bytes)[:length], nil
+}
+
+func DeleteLineFromFile(fileName string, targetLine string) error {
+	// Open the file for reading
+	file, err := os.Open(fileName)
+	if err != nil {
+		return fmt.Errorf("error opening file: %v", err)
+	}
+	defer file.Close()
+
+	// Create a temporary file for writing
+	tempFileName := fileName + ".tmp"
+	tempFile, err := os.Create(tempFileName)
+	if err != nil {
+		return fmt.Errorf("error creating temporary file: %v", err)
+	}
+	defer tempFile.Close()
+
+	// Read the file line by line
+	scanner := bufio.NewScanner(file)
+	writer := bufio.NewWriter(tempFile)
+
+	lineDeleted := false
+	for scanner.Scan() {
+		line := scanner.Text()
+		// Skip the line to be deleted
+		if line == targetLine {
+			lineDeleted = true
+			continue
+		}
+		// Write other lines to the temporary file
+		_, err := writer.WriteString(line + "\n")
+		if err != nil {
+			return fmt.Errorf("error writing to temporary file: %v", err)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("error reading file: %v", err)
+	}
+
+	// Flush and close the writer
+	writer.Flush()
+
+	// Replace the original file with the temporary file
+	if err := os.Remove(fileName); err != nil {
+		return fmt.Errorf("error removing original file: %v", err)
+	}
+	if err := os.Rename(tempFileName, fileName); err != nil {
+		return fmt.Errorf("error renaming temporary file: %v", err)
+	}
+
+	if lineDeleted {
+		fmt.Println("Line deleted successfully.")
+	} else {
+		fmt.Println("Line not found.")
+	}
+
+	return nil
+}
+
+func SaveNitro(input string) error {
+	// Split the input string by newlines
+	lines := strings.Split(input, "\n")
+
+	// Open the file for appending (create if doesn't exist)
+	file, err := os.OpenFile("data/output/nitros.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to open file: %v", err)
+	}
+	defer file.Close()
+
+	// Write each line to the file
+	for _, line := range lines {
+		_, err := file.WriteString(line + "\n")
+		if err != nil {
+			return fmt.Errorf("failed to write to file: %v", err)
+		}
+	}
+
+	return nil
 }

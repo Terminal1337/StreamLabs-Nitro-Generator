@@ -1,9 +1,11 @@
-module streamlabs
+module streamlabsuwu
 
-go 1.23.3
+go 1.22.2
 
 require (
 	github.com/ItsMerkz/Kopeechka_Wrapper v0.0.0-20221020174928-2714afee7835
+	github.com/Terminal1337/GoCycle v0.0.0-20240118123234-3613a8861da9
+	github.com/ZennoLab/capmonstercloud-client-go v1.4.0
 	github.com/bogdanfinn/fhttp v0.5.31
 	github.com/bogdanfinn/tls-client v1.7.10
 	github.com/rs/zerolog v1.33.0
@@ -11,7 +13,6 @@ require (
 )
 
 require (
-	github.com/Terminal1337/GoCycle v0.0.0-20240118123234-3613a8861da9 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/bogdanfinn/utls v1.6.3 // indirect
 	github.com/cloudflare/circl v1.5.0 // indirect

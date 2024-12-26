@@ -5,8 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -101,4 +103,52 @@ func CapSolve() (string, error) {
 		return "", err
 	}
 	return res.Solution["token"].(string), nil
+}
+
+func CapGetClearance(proxy string) (string, string, string, error) {
+	fmt.Println(proxy)
+	proxy = strings.Replace(proxy, "http://", "", -1)
+	fmt.Println(proxy)
+
+	parts := strings.Split(proxy, "@")
+	if len(parts) != 2 {
+		return "", "", "", fmt.Errorf("invalid proxy format")
+	}
+	auth := strings.Split(parts[0], ":")
+	if len(auth) != 2 {
+		return "", "", "", fmt.Errorf("invalid authentication format")
+	}
+	ipPort := parts[1]
+	proxyFormatted := fmt.Sprintf("%s:%s:%s", ipPort, auth[0], auth[1])
+
+	maxRetries := 3
+	var res *capSolverResponse
+	var err error
+
+	for attempt := 1; attempt <= maxRetries; attempt++ {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*120)
+		defer cancel()
+
+		res, err = capSolver(ctx, apikey, map[string]any{
+			"type":       "AntiCloudflareTask",
+			"websiteURL": "https://streamlabs.com/discord/nitro",
+			"proxy":      proxyFormatted,
+		})
+		if err == nil {
+			break
+		}
+		if attempt < maxRetries {
+			fmt.Printf("Attempt %d/%d failed. Retrying...\n", attempt, maxRetries)
+		}
+	}
+
+	if err != nil {
+		return "", "", "", fmt.Errorf("failed after %d attempts: %w", maxRetries, err)
+	}
+	fmt.Println(res)
+	token := res.Solution["token"].(string)
+	secChUa := res.Solution["headers"].(map[string]any)["sec-ch-ua"].(string)
+	userAgent := res.Solution["headers"].(map[string]any)["User-Agent"].(string)
+
+	return token, secChUa, userAgent, nil
 }
