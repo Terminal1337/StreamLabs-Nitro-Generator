@@ -13,7 +13,7 @@ func CreateClient() (tls_client.HttpClient, error) {
 
 	jar := tls_client.NewCookieJar()
 	options := []tls_client.HttpClientOption{
-		tls_client.WithTimeoutSeconds(30),
+		tls_client.WithTimeoutSeconds(60),
 		tls_client.WithClientProfile(profiles.Chrome_131),
 		tls_client.WithCookieJar(jar),
 		tls_client.WithProxyUrl("http://" + Proxies.Next()),

@@ -7,7 +7,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
+	"streamlabsuwu/internal/config"
 	"strings"
 	"time"
 )
@@ -22,8 +25,18 @@ type capSolverResponse struct {
 }
 
 var (
-	apikey = "CAP-F19DE1CD3C46ADED7C93C246552170DD"
+	Config *config.Data
 )
+
+func init() {
+	var err error
+	Config, err = config.ReadConfig()
+	if err != nil {
+		log.Println(err.Error())
+		os.Exit(1)
+	}
+
+}
 
 func capSolver(ctx context.Context, apiKey string, taskData map[string]any) (*capSolverResponse, error) {
 	uri := "https://api.capsolver.com/createTask"
@@ -94,7 +107,7 @@ func CapSolve() (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*120)
 	defer cancel()
 
-	res, err := capSolver(ctx, apikey, map[string]any{
+	res, err := capSolver(ctx, Config.Capsolver, map[string]any{
 		"type":       "AntiTurnstileTaskProxyLess",
 		"websiteURL": "https://streamlabs.com",
 		"websiteKey": "0x4AAAAAAACELUBpqiwktdQ9",
@@ -106,9 +119,8 @@ func CapSolve() (string, error) {
 }
 
 func CapGetClearance(proxy string) (string, string, string, error) {
-	fmt.Println(proxy)
 	proxy = strings.Replace(proxy, "http://", "", -1)
-	fmt.Println(proxy)
+	// fmt.Println(proxy)
 
 	parts := strings.Split(proxy, "@")
 	if len(parts) != 2 {
@@ -129,7 +141,7 @@ func CapGetClearance(proxy string) (string, string, string, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*120)
 		defer cancel()
 
-		res, err = capSolver(ctx, apikey, map[string]any{
+		res, err = capSolver(ctx, Config.Capsolver, map[string]any{
 			"type":       "AntiCloudflareTask",
 			"websiteURL": "https://streamlabs.com/discord/nitro",
 			"proxy":      proxyFormatted,
@@ -145,7 +157,6 @@ func CapGetClearance(proxy string) (string, string, string, error) {
 	if err != nil {
 		return "", "", "", fmt.Errorf("failed after %d attempts: %w", maxRetries, err)
 	}
-	fmt.Println(res)
 	token := res.Solution["token"].(string)
 	secChUa := res.Solution["headers"].(map[string]any)["sec-ch-ua"].(string)
 	userAgent := res.Solution["headers"].(map[string]any)["User-Agent"].(string)

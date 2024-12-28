@@ -195,7 +195,7 @@ func safeClose(closer io.Closer) {
 
 func SetConsoleTitle() {
 	for {
-		titlestr := fmt.Sprintf("StreamLabs Nitro Creator | Created : %d | Linked : %d | Emails : %d | Nitros : %d | Errors : %d", created, connected, nitros, errors)
+		titlestr := fmt.Sprintf("StreamLabs Nitro Creator | Created : %d | Linked : %d |  Nitros : %d | Errors : %d", created, connected, nitros, errors)
 		kernel32, err := syscall.LoadLibrary("kernel32.dll")
 		if err != nil {
 			continue
