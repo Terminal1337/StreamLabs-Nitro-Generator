@@ -1,23 +1,26 @@
-![image](https://github.com/user-attachments/assets/da415b68-f451-4a07-afb9-7c6771202238)
+
+
+
+https://github.com/user-attachments/assets/aee8f04f-7f9e-4a05-87d4-b7b999e63ae3
+
 
 
 
 
 ```
-proxies_ipv6 -> for cf_clearance & streamlabs
-proxies_ipv4 -> for x requests
-- U can put same list on both if u plan to use ipv4 only
+Setup : 
+1) cmd/data/input/proxies_ipv6 -> proxies for cloudflare / streamlabs
+2) cmd/data/input/proxies_ipv4 -> proxies for twitter
+* U can put same list on both if u plan to use ipv4 only
+3) cmd/data/input/config.json -> set your https://capsolver.com key here
+4) Install Golang https://go.dev/
+5) `go run .` to run
 ````
 
 ```
-How to Use:
-
-1) Remove Comments From cmd/main.go and Add Your Own Name
-2) Compile with "go build" & Resell With Your Name
+Important Information:
+1) Dont Forget to Remove Comments/Credits From cmd/main.go when u resell, Otherwise No Nitros For You TwT 
 ```
-
-NOTE : It's not fully finished yet. I have to clean up some shit and add configurable options.
-
 
 ```
 TODO:
@@ -25,3 +28,10 @@ TODO:
 2) CleanUP
 3) TwT connect & disconnect for reuse
 4) IDK?
+```
+
+```
+Contact : 
+Telegram : https://t.me/icebergs
+Discord : casanova4
+```
