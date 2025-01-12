@@ -1,4 +1,4 @@
-
+PS : Many Users Dmed Me Recently, Saying Gen Isnt working! I'll check and update when I get time. Else fork it and do it yourself.
 
 
 https://github.com/user-attachments/assets/aee8f04f-7f9e-4a05-87d4-b7b999e63ae3
